@@ -1,7 +1,7 @@
 /**
  * @description 用户信息配置
  */
-import {fetchDo} from "@/utils/fetch";
+
 import {setStore,removeStore} from '@/utils/store'
 const state = {
   userInfo: {},
@@ -82,87 +82,37 @@ const mutations = {
 }
 
 const actions = {
-  // 根据用户名登录
-  LoginByUsername({commit}, userInfo) {
-    const user = encryption({
-      data: userInfo,
-      key: 'loongloongloongx',
-      param: ['password']
-    })
-    return new Promise((resolve, reject) => {
-      debugger
-      loginByUsername(user.username, user.password, user.code, user.randomStr).then(response => {
-        const data = response.data
-        commit('SET_ACCESS_TOKEN', data.access_token)
-        commit('SET_REFRESH_TOKEN', data.refresh_token)
-        commit('SET_EXPIRES_IN', data.expires_in)
-        commit('CLEAR_LOCK')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-  // 根据手机号登录
-  LoginByPhone({commit}, userInfo) {
-    return new Promise((resolve, reject) => {
-      loginByMobile(userInfo.mobile, userInfo.code).then(response => {
-        const data = response.data
-        commit('SET_ACCESS_TOKEN', data.access_token)
-        commit('SET_REFRESH_TOKEN', data.refresh_token)
-        commit('SET_EXPIRES_IN', data.expires_in)
-        commit('CLEAR_LOCK')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
-  // 根据OpenId登录
-  LoginBySocial({commit}, param) {
-    return new Promise((resolve, reject) => {
-      loginBySocial(param.state, param.code).then(response => {
-        const data = response.data
-        commit('SET_ACCESS_TOKEN', data.access_token)
-        commit('SET_REFRESH_TOKEN', data.refresh_token)
-        commit('SET_EXPIRES_IN', data.expires_in)
-        commit('CLEAR_LOCK')
-        resolve()
-      }).catch(error => {
-        reject(error)
-      })
-    })
-  },
   GetUserInfo({commit}) {
     
     return new Promise((resolve, reject) => {
       
-      fetchDo('/admin/user/info',"",'get').then(res => {
+      // fetchDo('/admin/user/info',"",'get').then(res => {
         
-        const data = res.data.data || {}
-        commit('SET_USERIFNO', data.sysUser)
-        commit('SET_ROLES', data.roles || [])
-        commit('SET_PERMISSIONS', data.permissions || [])
-        resolve(data)
-      }).catch((err) => {
-        reject()
-      })
+        // const data = res.data.data || {}
+        // commit('SET_USERIFNO', data.sysUser)
+        // commit('SET_ROLES', data.roles || [])
+        // commit('SET_PERMISSIONS', data.permissions || [])
+        // resolve(data)
+        resolve()
+      // }).catch((err) => {
+      //   reject()
+      // })
 
     })
   },
   // 刷新token
   RefreshToken({commit, state}) {
     return new Promise((resolve, reject) => {
-      refreshToken(state.refresh_token).then(response => {
-        const data = response.data
-        commit('SET_ACCESS_TOKEN', data.access_token)
-        commit('SET_REFRESH_TOKEN', data.refresh_token)
-        commit('SET_EXPIRES_IN', data.expires_in)
-        commit('CLEAR_LOCK')
+      // refreshToken(state.refresh_token).then(response => {
+        // const data = response.data
+        // commit('SET_ACCESS_TOKEN', data.access_token)
+        // commit('SET_REFRESH_TOKEN', data.refresh_token)
+        // commit('SET_EXPIRES_IN', data.expires_in)
+        // commit('CLEAR_LOCK')
         resolve()
-      }).catch(error => {
-        reject(error)
-      })
+      // }).catch(error => {
+      //   reject(error)
+      // })
     })
   },
   // 登出
@@ -173,10 +123,10 @@ const actions = {
       //   commit('SET_MENU', [])
       //   commit('SET_PERMISSIONS', [])
       //   // commit('SET_USER_INFO', {})
-        commit('SET_ACCESS_TOKEN', '')
-        commit('SET_REFRESH_TOKEN', '')
-        commit('SET_EXPIRES_IN', '')
-        commit('SET_ROLES', [])
+        // commit('SET_ACCESS_TOKEN', '')
+        // commit('SET_REFRESH_TOKEN', '')
+        // commit('SET_EXPIRES_IN', '')
+        // commit('SET_ROLES', [])
         // commit('DEL_ALL_TAG')
       //   commit('CLEAR_LOCK')
       //   resolve()
