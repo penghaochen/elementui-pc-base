@@ -54,6 +54,7 @@ module.exports = {
     disableHostCheck: true
     // after: require('./mock/mock-server.js')
   },
+  
   configureWebpack: {
     // provide the app's title in webpack's name field, so that
     // it can be accessed in index.html to inject the correct title.
@@ -71,6 +72,7 @@ module.exports = {
       new webpack.NormalModuleReplacementPlugin(/element-ui[\/\\]lib[\/\\]locale[\/\\]lang[\/\\]en/, 'element-ui/lib/locale/lang/zh-CN')
     ]
   },
+  transpileDependencies: ['tree-table-vue', 'element-ui'],
   chainWebpack(config) {
     config.plugins.delete('preload') // TODO: need test
     config.plugins.delete('prefetch') // TODO: need test
