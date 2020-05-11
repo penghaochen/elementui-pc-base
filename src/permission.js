@@ -3,8 +3,8 @@
  * @author digua
  * @version 0.1.0
  */
-import router from './router'
-import store from './store'
+// import router from './router'
+import router from './router/router.config'
 import NProgress from 'nprogress' // 顶部进度条
 import 'nprogress/nprogress.css' // 顶部进度条样式
 import settings from '@/settings/index' // 获取公共参数
@@ -15,7 +15,7 @@ NProgress.configure({ showSpinner: false }) // 进度条配置
 router.beforeEach(async(to, from, next) => {
   // 进度条开启
   NProgress.start()
-  // 设置标题
+  // 设置标题s
   document.title = to.meta.title || settings.title
   // 获取缓存中的access_token
   let sessionId=getStore({

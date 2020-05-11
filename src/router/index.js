@@ -65,22 +65,6 @@ export const constantRoutes = [
       isAuth: false
     }
   },
-  {
-    path: '/system',
-    component: Layout,
-    redirect: '/app/index',
-    name: 'system',
-    meta: { title: '系统管理', icon: 'exampl1e' },
-    children: [
-      // 应用管理
-      {
-        path: 'app/index',
-        name: 'app',
-        component: () => import('@/views/system/app/index'),
-        meta: { title: '应用管理', icon: 'tree' }
-      },
-    ]
-  },
     // 无路由统一跳转页面
   { path: '*', redirect: '/404', hidden: true }
 ]
