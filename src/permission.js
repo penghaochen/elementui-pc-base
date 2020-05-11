@@ -5,6 +5,7 @@
  */
 // import router from './router'
 import router from './router/router.config'
+import store from './store'
 import NProgress from 'nprogress' // 顶部进度条
 import 'nprogress/nprogress.css' // 顶部进度条样式
 import settings from '@/settings/index' // 获取公共参数
