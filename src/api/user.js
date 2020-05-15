@@ -1,6 +1,7 @@
-import request from '@/libs/request'
-import { getToken } from '@/libs/util'
-
+// import request from '@/libs/request'
+import request from '@/utils/request'
+// import { getToken } from '@/libs/util'
+import { getToken } from '@/utils/util'
 
 /**
  * 登出
@@ -8,7 +9,7 @@ import { getToken } from '@/libs/util'
 export const logout = () => {
   return request({
     url: 'admin/logout/token',
-    data: { token: getToken() },
+    // data: { token: getToken() },
     method: 'post'
   })
 }

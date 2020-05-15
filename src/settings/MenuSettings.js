@@ -1,6 +1,6 @@
 const silderMenus = [
   {
-    path: "/system",
+    path: "/systemMgmt",
     meta: {
       title: "系统管理",
       icon: "example"
@@ -51,6 +51,13 @@ const silderMenus = [
         path: "empty",
         meta: {
           title: "测试用具",
+          icon: "table"
+        }
+      },
+      {
+        path: "patternStandard",
+        meta: {
+          title: "验证标准",
           icon: "table"
         }
       },

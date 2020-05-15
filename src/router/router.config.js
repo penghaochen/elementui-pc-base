@@ -7,12 +7,14 @@ import Router from 'vue-router'
 // import { getStore } from '@/utils/store'
 
 import home from './homeRoute' // 首页模块
+import systemMgmt from './systemMgmtRoute' //系统管理
+
 
 import store from '@/store/index' // 缓存数据
 Vue.use(Router)
 // 配置路由
 const RouterModel = new Router({
-  routes: [...home, 
+  routes: [...home, ...systemMgmt,
     // 非匹配路由指向默认路由
     {
       path: '*',

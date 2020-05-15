@@ -14,6 +14,9 @@ import store from './store' // 缓存数据
 import router from './router/router.config' // 路由配置
 import basicContainer from './components/BasicContainer/main' // 主界面容器模板
 
+import TreeTable from 'tree-table-vue'
+import prototype from '@/utils/prototype' // 原型方法
+
 import i18n from './i18n/'// 国际化文件配置
 import '@/filter/filter.config' // 公共过滤器
 import mixin from '@/mixin/routerMixin' // 路由拦截器配置
@@ -29,7 +32,7 @@ Vue.use(ElementUI);
 Vue.mixin(mixin)
 
 
-
+Vue.component(TreeTable.name, TreeTable)
 
 /**
  * If you don't want to use mock-server
