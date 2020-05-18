@@ -5,13 +5,13 @@
     <el-form :inline="true" :model="pageInfo" size="small" class="demo-form-inline form-btn-box" ref="searchForm"
       label-width="80px" style="margin-bottom:30px">
       <el-form-item label="登录名" prop="userName">
-        <el-input v-model="pageInfo.userName" placeholder="请输入关键字"></el-input>
+        <el-input v-model="pageInfo.userName" placeholder="请输入关键字" clearable></el-input>
       </el-form-item>
       <el-form-item label="手机号" prop="mobile">
-        <el-input v-model="pageInfo.mobile" placeholder="请输入关键字"></el-input>
+        <el-input v-model="pageInfo.mobile" placeholder="请输入关键字" clearable></el-input>
       </el-form-item>
       <el-form-item label="邮箱" prop="email">
-        <el-input v-model="pageInfo.email" placeholder="请输入关键字"></el-input>
+        <el-input v-model="pageInfo.email" placeholder="请输入关键字" clearable></el-input>
       </el-form-item>
       <el-form-item style="margin-left:40px">
         <el-button type="primary" @click="handleSearch(1)">查询</el-button>
@@ -47,8 +47,8 @@
       <el-table-column label="操作" fixed="right" width="140">
         <template slot-scope="scope">
           <a :disabled="hasAuthority('systemUserEdit')?false:true" @click="handleModal(scope.row)" class="linkfont">编辑</a>&nbsp;
-          <!-- <el-dropdown v-show="hasAuthority('systemUserEdit')" ref="dropdown" @on-click="handleClick($event,row)"> -->
-          <el-dropdown ref="dropdown" @on-click="handleClick($event,row)">
+          <!-- <el-dropdown v-show="hasAuthority('systemUserEdit')" ref="dropdown" @on-click="handleClick($event,scope.row)"> -->
+          <el-dropdown ref="dropdown" @on-click="handleClick($event,scope.row)">
             <a href="javascript:void(0)">
               <span class="linkfont">更多</span>
               <i class="el-icon-arrow-down el-icon--right"></i>
@@ -154,14 +154,14 @@
         <el-tab-pane label="修改密码" name="form4">
           <el-form v-show="current == 'form4'" ref="form4" :model="formItem" :rules="formItemRules" label-width="120px">
             <el-form-item label="登录名" prop="userName">
-              <el-input :disabled="formItem.userId?true:false" v-model="formItem.userName" placeholder="请输入内容">
+              <el-input :disabled="formItem.userId?true:false" v-model="formItem.userName" placeholder="请输入内容" clearable>
               </el-input>
             </el-form-item>
             <el-form-item label="登录密码" prop="password">
-              <el-input type="password" v-model="formItem.password" placeholder="请输入内容"></el-input>
+              <el-input type="password" v-model="formItem.password" placeholder="请输入内容" clearable></el-input>
             </el-form-item>
             <el-form-item label="再次确认密码" prop="passwordConfirm">
-              <el-input type="password" v-model="formItem.passwordConfirm" placeholder="请输入内容"></el-input>
+              <el-input type="password" v-model="formItem.passwordConfirm" placeholder="请输入内容" clearable></el-input>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -327,57 +327,57 @@
           expireTime: '',
           isExpired: false
         },
-        // columns: [{
-        //     type: 'selection',
-        //     width: 60
-        //   },
-        //   {
-        //     title: '登录名',
-        //     key: 'userName',
-        //     width: 200
-        //   },
-        //   {
-        //     title: '昵称',
-        //     key: 'nickName',
-        //     width: 150
-        //   },
-        //   {
-        //     title: '邮箱',
-        //     key: 'email',
-        //     width: 200
-        //   },
-        //   {
-        //     title: '手机号',
-        //     key: 'mobile',
-        //     width: 200
-        //   },
-        //   {
-        //     title: '状态',
-        //     slot: 'status',
-        //     key: 'status',
-        //     width: 100
-        //   },
-        //   {
-        //     title: '用户类型',
-        //     key: 'userType',
-        //     width: 150
-        //   },
-        //   {
-        //     title: '注册时间',
-        //     key: 'createTime',
-        //     width: 180
-        //   },
-        //   {
-        //     title: '描述',
-        //     key: 'userDesc'
-        //   },
-        //   {
-        //     title: '操作',
-        //     slot: 'action',
-        //     fixed: 'right',
-        //     width: 150
-        //   }
-        // ],
+        columns: [{
+            type: 'selection',
+            width: 60
+          },
+          {
+            title: '登录名',
+            key: 'userName',
+            width: 200
+          },
+          {
+            title: '昵称',
+            key: 'nickName',
+            width: 150
+          },
+          {
+            title: '邮箱',
+            key: 'email',
+            width: 200
+          },
+          {
+            title: '手机号',
+            key: 'mobile',
+            width: 200
+          },
+          {
+            title: '状态',
+            slot: 'status',
+            key: 'status',
+            width: 100
+          },
+          {
+            title: '用户类型',
+            key: 'userType',
+            width: 150
+          },
+          {
+            title: '注册时间',
+            key: 'createTime',
+            width: 180
+          },
+          {
+            title: '描述',
+            key: 'userDesc'
+          },
+          {
+            title: '操作',
+            slot: 'action',
+            fixed: 'right',
+            width: 150
+          }
+        ],
         columns2: [{
             title: '菜单',
             key: 'menuName',
