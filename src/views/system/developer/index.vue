@@ -154,7 +154,7 @@ import {
   updateDeveloper,
   addDeveloper,
   updatePassword
-} from '@/api/developer'
+} from '@/api/developerApi'
 
 export default {
   name: 'SystemDeveloper',

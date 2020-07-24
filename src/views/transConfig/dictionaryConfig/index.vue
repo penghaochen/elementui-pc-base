@@ -75,7 +75,7 @@ import {
   editRspMsg,
   getRspMsgPage,
   deleteRspMsgById
-} from '@/api/dictionaryConfig'
+} from '@/api/dictionaryConfigApi'
 export default {
   name: 'DictionaryConfig',
   data() {

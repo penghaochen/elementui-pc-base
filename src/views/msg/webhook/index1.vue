@@ -82,7 +82,7 @@
 </template>
 
 <script>
-import { getBatchLogs } from '@/api/msg'
+import { getBatchLogs } from '@/api/msgApi'
 
 export default {
   name: 'MsgHttpLogs',

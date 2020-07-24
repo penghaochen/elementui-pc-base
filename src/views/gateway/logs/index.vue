@@ -107,7 +107,7 @@
 </template>
 
 <script>
-import { getAccessLogs } from '@/api/gateway'
+import { getAccessLogs } from '@/api/gatewayApi'
 import { readUserAgent } from '@/utils/util'
 
 export default {

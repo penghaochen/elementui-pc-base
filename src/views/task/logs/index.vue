@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { getJobLogs } from '@/api/job'
+import { getJobLogs } from '@/api/jobApi'
 
 export default {
   name: 'TaskJobLogs',

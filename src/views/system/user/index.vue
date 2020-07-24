@@ -212,10 +212,10 @@ import {
   getUserRoles,
   addUserRoles,
   updatePassword
-} from '@/api/user'
+} from '@/api/userApi'
 import {
   getAllRoles
-} from '@/api/role'
+} from '@/api/roleApi'
 import {
   listConvertTree
 } from '@/utils/util'
@@ -223,7 +223,7 @@ import {
   getAuthorityMenu,
   getAuthorityUser,
   grantAuthorityUser
-} from '@/api/authority'
+} from '@/api/authorityApi'
 
 export default {
   name: 'SystemUser',

@@ -272,11 +272,11 @@ import {
   batchUpdateStatusApi,
   batchUpdateAuthApi,
   batchUpdateEncApi
-} from '@/api/api'
+} from '@/api/apiApi'
 
 import {
   getServiceList
-} from '@/api/gateway'
+} from '@/api/gatewayApi'
 
 export default {
   name: 'SystemApi',

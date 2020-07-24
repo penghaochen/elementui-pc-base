@@ -212,7 +212,7 @@ import {
   editDictionary,
   deleteDictionaryById,
   getDictionaryPage
-} from '@/api/patternStandard'
+} from '@/api/patternStandardApi'
 export default {
   name: 'PatternStandard',
   data() {

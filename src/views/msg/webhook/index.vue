@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { getNotifyHttpLogs } from '@/api/msg'
+import { getNotifyHttpLogs } from '@/api/msgApi'
 
 export default {
   name: 'MsgHttpLogs',

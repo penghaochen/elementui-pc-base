@@ -121,8 +121,8 @@
 </template>
 
 <script>
-import { getIpLimits, addIpLimit, updateIpLimit, removeIpLimit, getIpLimitApis, addIpLimitApis } from '@/api/ipLimit'
-import { getAuthorityApi } from '@/api/authority'
+import { getIpLimits, addIpLimit, updateIpLimit, removeIpLimit, getIpLimitApis, addIpLimitApis } from '@/api/ipLimitApi'
+import { getAuthorityApi } from '@/api/authorityApi'
 
 export default {
   name: 'GatewayIpLimit',

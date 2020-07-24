@@ -102,10 +102,10 @@ import {
   removeRateLimit,
   getRateLimitApis,
   addRateLimitApis
-} from '@/api/rateLimit'
+} from '@/api/rateLimitApi'
 import {
   getAuthorityApi
-} from '@/api/authority'
+} from '@/api/authorityApi'
 export default {
   name: 'GatewayRateLimit',
   data() {

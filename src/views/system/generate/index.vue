@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import Generate from '@/api/generate'
+import Generate from '@/api/generateApi'
 
 export default {
   name: 'Generate',

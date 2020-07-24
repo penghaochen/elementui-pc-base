@@ -98,12 +98,12 @@ import {
   updateAction,
   addAction,
   removeAction
-} from '@/api/action'
+} from '@/api/actionApi'
 import {
   getAuthorityApi,
   getAuthorityAction,
   grantAuthorityAction
-} from '@/api/authority'
+} from '@/api/authorityApi'
 
 export default {
   name: 'MenuAction',

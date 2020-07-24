@@ -269,14 +269,14 @@
 </template>
 
 <script>
-import { getApps, updateApp, addApp, removeApp, getAppClientInfo, updateAppClientInfo, restApp } from '@/api/app'
-import { getAllDevelopers } from '@/api/developer'
+import { getApps, updateApp, addApp, removeApp, getAppClientInfo, updateAppClientInfo, restApp } from '@/api/appApi'
+import { getAllDevelopers } from '@/api/developerApi'
 // import { startWith, listConvertGroup } from '@/utils/util'
 import {
   getAuthorityApi,
   getAuthorityApp,
   grantAuthorityApp
-} from '@/api/authority'
+} from '@/api/authorityApi'
 
 export default {
   name: 'SystemApp',

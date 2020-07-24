@@ -126,8 +126,8 @@
 </template>
 
 <script>
-import { getRoutes, updateRoute, addRoute, removeRoute } from '@/api/route'
-import { refreshGateway } from '@/api/gateway'
+import { getRoutes, updateRoute, addRoute, removeRoute } from '@/api/routeApi'
+import { refreshGateway } from '@/api/gatewayApi'
 
 export default {
   name: 'GatewayRoute',

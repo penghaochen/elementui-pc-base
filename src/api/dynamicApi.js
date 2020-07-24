@@ -30,18 +30,18 @@ export const edit = (data) => {
  * @param params 上传参数
  */
 export const getDynamicPage = ({ limit, page }) => {
-    const params = { size: limit, current: page }
-    return request({
-      url: 'trans/dynamicconfiguration/page',
-      params,
-      method: 'get'
-    })
-  }
-  /**
+  const params = { size: limit, current: page }
+  return request({
+    url: 'trans/dynamicconfiguration/page',
+    params,
+    method: 'get'
+  })
+}
+/**
  * 查询数据库表
  * @param params 上传参数
  */
-export const getTables = ({}) => {
+export const getTables = () => {
   const params = {}
   return request({
     url: 'trans/dynamicconfiguration/queryTableList',
@@ -49,12 +49,12 @@ export const getTables = ({}) => {
     method: 'get'
   })
 }
-  /**
+/**
  * 查询数据库表中字段
  * @param params 上传参数
  */
-export const getColumnNames = ({tableName}) => {
-  const params = {tableName:tableName}
+export const getColumnNames = ({ tableName }) => {
+  const params = { tableName: tableName }
   return request({
     url: 'trans/dynamicconfiguration/queryTableColumns',
     params,
@@ -62,11 +62,11 @@ export const getColumnNames = ({tableName}) => {
   })
 }
 
-  /**
+/**
  * 刷新动态配置
  * @param params 上传参数
  */
-export const refresh = ({id}) => {
+export const refresh = ({ id }) => {
   const params = { id: id }
   // const params = {id:id,namespace:namespace,nacosGroup:nacosGroup,databaseTable:databaseTable,nacosKey:nacosKey,fields:fields}
   return request({

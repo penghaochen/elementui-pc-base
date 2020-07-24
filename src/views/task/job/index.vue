@@ -132,8 +132,8 @@
 
 <script>
 // import { listConvertTree } from '@/utils/util'
-import { getJobs, addHttpJob, updateHttpJob, removeJob, pauseJob, resumeJob } from '@/api/job'
-import { getAllApi } from '@/api/api'
+import { getJobs, addHttpJob, updateHttpJob, removeJob, pauseJob, resumeJob } from '@/api/jobApi'
+import { getAllApi } from '@/api/apiApi'
 export default {
   name: 'TaskJob',
   data() {

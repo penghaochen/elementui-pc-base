@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { getAllApis } from '@/api/api'
+import { getAllApis } from '@/api/apiApi'
 export default {
   name: 'App',
   data() {

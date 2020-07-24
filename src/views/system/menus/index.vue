@@ -135,7 +135,7 @@ import {
   updateMenu,
   addMenu,
   removeMenu
-} from '@/api/menu'
+} from '@/api/menuApi'
 import MenuAction from './menu-action.vue'
 import icons from './icons'
 

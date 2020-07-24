@@ -171,15 +171,15 @@ import {
   removeRole,
   getRoleUsers,
   addRoleUsers
-} from '@/api/role'
+} from '@/api/roleApi'
 import {
   getAllUsers
-} from '@/api/user'
+} from '@/api/userApi'
 import {
   getAuthorityMenu,
   getAuthorityRole,
   grantAuthorityRole
-} from '@/api/authority'
+} from '@/api/authorityApi'
 import {
   listConvertTree
 } from '@/utils/util'

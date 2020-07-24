@@ -162,7 +162,7 @@ import {
   deleteById,
   save,
   edit
-} from '@/api/dynamic'
+} from '@/api/dynamicApi'
 export default {
   name: 'Dynamic',
   data() {
