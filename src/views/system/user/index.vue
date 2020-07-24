@@ -16,8 +16,8 @@
       <el-form-item style="margin-left:40px">
         <el-button type="primary" @click="handleSearch(1)">查询</el-button>
         <el-button type="default" @click="handleResetForm('searchForm')">重置</el-button>
-        <!-- <el-button :disabled="hasAuthority('systemUserEdit')?false:true" type="primary" @click="handleModal()">添加</el-button> -->
-        <el-button type="primary" @click="handleModal()">添加</el-button>
+        <el-button :disabled="hasAuthority('systemUserEdit')?false:true" type="primary" @click="handleModal()">添加</el-button>
+        <!-- <el-button type="primary" @click="handleModal()">添加</el-button> -->
       </el-form-item>
     </el-form>
     <!-- <div style="margin-bottom:20px">
@@ -37,24 +37,32 @@
       <el-table-column prop="mobile" label="手机号" width="200">
       </el-table-column>
       <el-table-column prop="status" label="状态" width="100">
+        <template slot-scope="scope">
+          <el-badge is-dot v-if="scope.row.status===1" type="success"></el-badge>
+          <el-badge is-dot v-else-if="scope.row.status===2" type="warning"></el-badge>
+          <el-badge is-dot v-else="" type="danger"></el-badge>
+          <span v-if="scope.row.status===1">正常</span>
+          <span v-else-if="scope.row.status===2">锁定</span>
+          <span v-else="">禁用</span>
+        </template>
       </el-table-column>
       <el-table-column prop="userType" label="用户类型" width="150">
       </el-table-column>
       <el-table-column prop="createTime" label="注册时间" width="180">
       </el-table-column>
-      <el-table-column prop="userDesc" label="描述" width="220">
-      </el-table-column>
+      <!-- <el-table-column prop="userDesc" label="描述" width="220">
+      </el-table-column> -->
       <el-table-column label="操作" fixed="right" width="140">
         <template slot-scope="scope">
           <a :disabled="hasAuthority('systemUserEdit')?false:true" @click="handleModal(scope.row)" class="linkfont">编辑</a>&nbsp;
-          <!-- <el-dropdown v-show="hasAuthority('systemUserEdit')" ref="dropdown" @on-click="handleClick($event,scope.row)"> -->
-          <el-dropdown ref="dropdown" @on-click="handleClick($event,scope.row)">
+          <el-dropdown v-show="hasAuthority('systemUserEdit')" ref="dropdown" @command="handleClick">
+          <!-- <el-dropdown ref="dropdown" @on-click="handleClick($event,scope.row)"> -->
             <a href="javascript:void(0)">
               <span class="linkfont">更多</span>
               <i class="el-icon-arrow-down el-icon--right"></i>
             </a>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item name="sendToEmail">发送到密保邮箱</el-dropdown-item>
+              <el-dropdown-item :command="composeValue('sendToEmail',scope.row)">发送到密保邮箱</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -74,8 +82,10 @@
           <el-form v-show="current=='form1'" ref="form1" :model="formItem" :rules="formItemRules" label-width="120px">
             <el-form-item label="用户类型" prop="userType">
               <template>
-                <el-radio v-model="formItem.userType" label="1">超级管理员</el-radio>
-                <el-radio v-model="formItem.userType" label="2">普通管理员</el-radio>
+                <el-radio-group v-model="formItem.userType">
+                  <el-radio label="super">超级管理员</el-radio>
+                  <el-radio label="normal">普通管理员</el-radio>
+                </el-radio-group>
               </template>
             </el-form-item>
             <el-form-item label="昵称" prop="nickName">
@@ -99,9 +109,9 @@
             </el-form-item>
             <el-form-item label="状态" prop="status">
               <el-radio-group v-model="formItem.status" size="small">
-                <el-radio-button label="禁用" value="0"></el-radio-button>
-                <el-radio-button label="正常" value="1"></el-radio-button>
-                <el-radio-button label="锁定" value="2"></el-radio-button>
+                <el-radio-button label="0">禁用</el-radio-button>
+                <el-radio-button label="1">正常</el-radio-button>
+                <el-radio-button label="2">锁定</el-radio-button>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="描述" prop="userDesc">
@@ -110,24 +120,24 @@
           </el-form>
         </el-tab-pane>
         <!--  分配角色菜单-->
-        <!-- <el-tab-pane :disabled="!formItem.userId" label="分配角色" name="form2"> -->
-        <el-tab-pane label="分配角色" name="form2">
+        <el-tab-pane :disabled="!formItem.userId" label="分配角色" name="form2">
+        <!-- <el-tab-pane label="分配角色" name="form2"> -->
           <el-form v-show="current == 'form2'" ref="form2" :model="formItem" label-width="120px" :rules="formItemRules">
             <el-form-item label="分配角色" prop="grantRoles">
               <el-checkbox-group v-model="formItem.grantRoles">
-                <el-checkbox v-for="item in selectRoles" :label="item.roleId"><span>{{ item.roleName }}</span>
+                <el-checkbox v-for="(item,index) in selectRoles" :label="item.roleId" :key="index"><span>{{ item.roleName }}</span>
                 </el-checkbox>
               </el-checkbox-group>
             </el-form-item>
           </el-form>
         </el-tab-pane>
         <!--  分配权限菜单-->
-        <!-- <el-tab-pane :disabled="!formItem.userId" label="分配权限" name="form3"> -->
-        <el-tab-pane label="分配权限" name="form3">
+        <el-tab-pane :disabled="!formItem.userId" label="分配权限" name="form3">
+        <!-- <el-tab-pane label="分配权限" name="form3"> -->
           <el-alert title='支持用户单独分配功能权限(除角色已经分配菜单功能,禁止勾选!)' type="info" show-icon></el-alert>
           <el-form v-show="current == 'form3'" ref="form3" :model="formItem" :rules="formItemRules" label-width="120px">
             <el-form-item label="过期时间" prop="expireTime">
-              <el-badge v-if="formItem.isExpired" text="授权已过期">
+              <el-badge is-dot v-if="formItem.isExpired" text="授权已过期">
                 <el-date-picker v-model="formItem.expireTime" class="ivu-form-item-error" type="datetime"
                   placeholder="设置有效期">
                 </el-date-picker>
@@ -140,7 +150,7 @@
                 :is-fold="false" :tree-type="true" :selectable="true" :columns="columns2" :data="selectMenus">
                 <template slot="operation" slot-scope="scope">
                   <CheckboxGroup v-model="formItem.grantActions">
-                    <Checkbox :disabled="item.disabled" v-for="item in scope.row.actionList" :label="item.authorityId">
+                    <Checkbox :disabled="item.disabled" v-for="(item,index) in scope.row.actionList" :label="item.authorityId" :key="index">
                       <span :title="item.actionDesc">{{item.actionName}}</span>
                     </Checkbox>
                   </CheckboxGroup>
@@ -150,8 +160,8 @@
           </el-form>
         </el-tab-pane>
         <!--  修改密码-->
-        <!-- <el-tab-pane :disabled="!formItem.userId" label="修改密码" name="form4"> -->
-        <el-tab-pane label="修改密码" name="form4">
+        <el-tab-pane :disabled="!formItem.userId" label="修改密码" name="form4">
+        <!-- <el-tab-pane label="修改密码" name="form4"> -->
           <el-form v-show="current == 'form4'" ref="form4" :model="formItem" :rules="formItemRules" label-width="120px">
             <el-form-item label="登录名" prop="userName">
               <el-input :disabled="formItem.userId?true:false" v-model="formItem.userName" placeholder="请输入内容" clearable>
@@ -421,7 +431,7 @@
         this.formItem.status = this.formItem.status + ''
       },
       handleResetForm(form) {
-        debugger
+        
         this.$refs[form].resetFields()
       },
       handleReset() {
@@ -446,9 +456,9 @@
         }
         this.formItem = newData
         // 重置验证
-        debugger
+        
         this.forms.map(form => {
-          debugger
+          
           this.handleResetForm(form)
         })
         this.current = this.forms[0]
@@ -465,7 +475,11 @@
               if (this.formItem.userId) {
                 updateUser(this.formItem).then(res => {
                   if (res.code === 0) {
-                    this.$Message.success('保存成功')
+                    
+                    this.$message({
+                type: 'success',
+                message: '保存成功'
+              })
                     this.handleReset()
                   }
                   this.handleSearch()
@@ -475,7 +489,11 @@
               } else {
                 addUser(this.formItem).then(res => {
                   if (res.code === 0) {
-                    this.$Message.success('保存成功')
+                    
+                    this.$message({
+                type: 'success',
+                message: '保存成功'
+              })
                     this.handleReset()
                   }
                   this.handleSearch()
@@ -493,7 +511,10 @@
               this.saving = true
               addUserRoles(this.formItem).then(res => {
                 if (res.code === 0) {
-                  this.$Message.success('分配角色成功')
+                  this.$message({
+                type: 'success',
+                message: '分配角色成功'
+              })
                   this.handleReset()
                 }
                 this.handleSearch()
@@ -516,7 +537,11 @@
                 authorityIds: authorityIds
               }).then(res => {
                 if (res.code === 0) {
-                  this.$Message.success('授权成功')
+                  
+                  this.$message({
+                type: 'success',
+                message: '授权成功'
+              })
                   this.handleReset()
                 }
                 this.handleSearch()
@@ -536,7 +561,11 @@
                 password: this.formItem.password
               }).then(res => {
                 if (res.code === 0) {
-                  this.$Message.success('修改成功')
+              
+                  this.$message({
+                type: 'success',
+                message: '修改成功'
+              })
                   this.handleReset()
                 }
                 this.handleSearch()
@@ -652,13 +681,13 @@
        * @description 设置el-table内容居中
        */
       cellstyle() {
-        return "text-align:center;margin:0;padding:8px 0px 0px 0px";
+        return "padding-left: 10px;padding-right: 10px;";
       },
       /**
        * @description 设置el-table表头居中
        */
       rowClass() {
-        return "text-align:center";
+        return "background:#f8f8f9;color:#515a6e;padding-left: 10px;padding-right: 10px;";
       },
       handlePage(current) {
         this.pageInfo.page = current
@@ -668,11 +697,20 @@
         this.pageInfo.limit = size
         this.handleSearch()
       },
-      handleClick(name, row) {
-        switch (name) {
+      handleClick(command) {
+        switch (command.button) {
           case 'sendToEmail':
-            this.$Message.warning('发送至密保邮箱,开发中...')
+            this.$message({
+                type: 'warning',
+                message: '发送至密保邮箱,开发中...'
+              })
             break
+        }
+      },
+      composeValue(item, row){
+        return {
+        'button': item,
+        'row': row
         }
       },
       handleTabClick(name) {
@@ -681,17 +719,17 @@
       }
     },
     mounted: function () {
-      // this.handleSearch()
+      this.handleSearch()
     }
   }
 
 </script>
 
 <style scoped>
-  .linkfont {
-    color: #0000CC;
-    font-size: 12px;
-  }
+  /* .linkfont {
+    color: #409EFF;
+    font-size: 14px;
+  } */
   .form-btn-box {
     width: 90%;
   }

@@ -6,14 +6,14 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <i class="el-icon-menu"></i>
+          <i class="el-icon-menu" />
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown" class="user-dropdown">
           <div v-for="(item,index) in menus" :key="index">
             <router-link :to="item.path">
               <el-dropdown-item>
-                {{item.title}}
+                {{ item.title }}
               </el-dropdown-item>
             </router-link>
           </div>
@@ -27,49 +27,49 @@
 </template>
 
 <script>
-  import {
-    mapGetters
-  } from 'vuex'
-  import {
-    getNavbarMenus
-  } from '@/settings/MenuSettings'
-  import Breadcrumb from '@/components/BreadCrumb'
-  import Hamburger from '@/components/Hamburger'
-  import elDropdown from '@/components/Dropdown/src/dropdown'
-  import elDropdownMenu from '@/components/Dropdown/src/dropdown-menu'
-  import elDropdownItem from '@/components/Dropdown/src/dropdown-item'
-  export default {
-    components: {
-      Breadcrumb,
-      Hamburger,
-      elDropdown,
-      elDropdownMenu,
-      elDropdownItem
+import {
+  mapGetters
+} from 'vuex'
+import {
+  getNavbarMenus
+} from '@/settings/menuSettings'
+import Breadcrumb from '@/components/BreadCrumb'
+import Hamburger from '@/components/Hamburger'
+import elDropdown from '@/components/Dropdown/src/dropdown'
+import elDropdownMenu from '@/components/Dropdown/src/dropdown-menu'
+import elDropdownItem from '@/components/Dropdown/src/dropdown-item'
+export default {
+  components: {
+    Breadcrumb,
+    Hamburger,
+    elDropdown,
+    elDropdownMenu,
+    elDropdownItem
+  },
+  computed: {
+    ...mapGetters([
+      'sidebar',
+      'avatar'
+    ]),
+    menus() {
+      // 顶部菜单json数据
+      return getNavbarMenus()
+    }
+  },
+  methods: {
+    toggleSideBar() {
+      // 开启或关闭左侧菜单
+      this.$store.dispatch('app/toggleSideBar')
     },
-    computed: {
-      ...mapGetters([
-        'sidebar',
-        'avatar'
-      ]),
-      menus() {
-        // 顶部菜单json数据
-        return getNavbarMenus()
-      },
-    },
-    methods: {
-      toggleSideBar() {
-        // 开启或关闭左侧菜单
-        this.$store.dispatch('app/toggleSideBar')
-      },
-      // 登出交易 异步操作，需引用async函数
-      async logout() {
-        // async函数中使用await返回一个promise函数 等待返回后继续执行下面语句
-        await this.$store.dispatch('user/LogOut')
-        this.$router.push("/login")
-        // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
-      }
+    // 登出交易 异步操作，需引用async函数
+    async logout() {
+      // async函数中使用await返回一个promise函数 等待返回后继续执行下面语句
+      await this.$store.dispatch('user/handleLogout')
+      this.$router.push('/login')
+      // this.$router.push(`/login?redirect=${this.$route.fullPath}`)
     }
   }
+}
 
 </script>
 

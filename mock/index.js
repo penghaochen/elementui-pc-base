@@ -5,13 +5,48 @@ import { param2Obj } from '../src/utils'
 import login from './login'
 // 用户
 import userinfo from './user'
-// 系统管理
-import system from './system'
-
+// 应用管理
+import app from './system/app.js'
+// 用户管理
+import user from './system/user.js'
+// 开发者管理
+import developer from './system/developer.js'
+// 功能菜单
+import menu from './system/menu.js'
+// 角色菜单
+import role from './system/role.js'
+// API列表
+import api from './gateway/api.js'
+// 访问日志
+import logs from './gateway/logs.js'
+// 访问控制
+import iplimit from './gateway/ip-limit.js'
+// 流量控制
+import ratelimit from './gateway/rate-limit.js'
+// 网关路由
+import route from './gateway/route.js'
+// 响应信息
+import dictionaryConfig from './transConfig/dictionaryConfig.js'
+// 动态配置
+import dynamic from './transConfig/dynamic.js'
+// 数据字典
+import patternStandard from './transConfig/patternStandard.js'
 const mocks = [
   ...login,
   ...userinfo,
-  ...system
+  ...app,
+  ...user,
+  ...developer,
+  ...menu,
+  ...role,
+  ...api,
+  ...logs,
+  ...iplimit,
+  ...ratelimit,
+  ...route,
+  ...dictionaryConfig,
+  ...dynamic,
+  ...patternStandard
 ]
 
 // for front mock
@@ -40,7 +75,8 @@ export function mockXHR() {
         // https://expressjs.com/en/4x/api.html#req
         result = respond({
           method: type,
-          body: JSON.parse(body),
+          // body: JSON.parse(body),
+          body: body,
           query: param2Obj(url)
         })
       } else {

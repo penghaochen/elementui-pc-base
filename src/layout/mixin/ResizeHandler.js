@@ -22,11 +22,11 @@ export default {
   },
   mounted() {
     const isMobile = this.$_isMobile()
-    if (isMobile) {
-      //是否是手机模式
-      store.dispatch('app/toggleDevice', 'mobile')
-      store.dispatch('app/closeSideBar', { withoutAnimation: true })
-    }
+    // if (isMobile) {
+    //   //是否是手机模式
+    //   store.dispatch('app/toggleDevice', 'mobile')
+    //   store.dispatch('app/closeSideBar', { withoutAnimation: true })
+    // }
   },
   methods: {
     
@@ -35,14 +35,14 @@ export default {
       return rect.width - 1 < WIDTH
     },
     $_resizeHandler() {
-      if (!document.hidden) {
-        const isMobile = this.$_isMobile()
-        store.dispatch('app/toggleDevice', isMobile ? 'mobile' : 'desktop')
+      // if (!document.hidden) {
+      //   const isMobile = this.$_isMobile()
+      //   store.dispatch('app/toggleDevice', isMobile ? 'mobile' : 'desktop')
 
-        if (isMobile) {
-          store.dispatch('app/closeSideBar', { withoutAnimation: true })
-        }
-      }
+      //   if (isMobile) {
+      //     store.dispatch('app/closeSideBar', { withoutAnimation: true })
+      //   }
+      // }
     }
   }
 }

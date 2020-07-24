@@ -10,9 +10,9 @@
         :collapse="isCollapse"
         :background-color="variables.menuBg"
         :text-color="variables.menuText"
-        :unique-opened="false"
+        :unique-opened="true"
         :active-text-color="variables.menuActiveText"
-        :collapse-transition="false"
+        :collapse-transition="true"
         mode="vertical"
       >
         <sidebar-item
@@ -27,39 +27,40 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import { getSilderMenus } from '@/settings/MenuSettings'
-import Logo from "./Logo";
-import SidebarItem from "./SidebarItem";
-import variables from "@/settings/variables.scss";
-import elScrollbar from "@/components/Scrollbar/src/main";
-import elMenu from "@/components/Menu/src/menu";
+import { mapGetters } from 'vuex'
+
+import Logo from './Logo'
+import SidebarItem from './SidebarItem'
+import variables from '@/settings/variables.scss'
+import elScrollbar from '@/components/Scrollbar/src/main'
+import elMenu from '@/components/Menu/src/menu'
+
 export default {
-  components: { SidebarItem, Logo ,elScrollbar,elMenu},
+  components: { SidebarItem, Logo, elScrollbar, elMenu },
   computed: {
-    ...mapGetters(["sidebar"]),
+    ...mapGetters(['sidebar']),
     routes() {
       // 左侧导航菜单json数据
-      return getSilderMenus()
+      return this.$store.getters.menuList
     },
     activeMenu() {
-      const route = this.$route;
-      const { meta, path } = route;
+      const route = this.$route
+      const { meta, path } = route
       // 如果设置了activeMenu，则是选中了状态
       if (meta.activeMenu) {
-        return meta.activeMenu;
+        return meta.activeMenu
       }
-      return path;
+      return path
     },
     showLogo() {
-      return this.$store.state.settings.sidebarLogo;
+      return this.$store.state.settings.sidebarLogo
     },
     variables() {
-      return variables;
+      return variables
     },
     isCollapse() {
-      return !this.sidebar.opened;
+      return !this.sidebar.opened
     }
   }
-};
+}
 </script>

@@ -1,5 +1,5 @@
-// import request from '@/libs/request'
 import request from '@/utils/request'
+
 /**
  * 获取接口列表
  * @param page
@@ -25,6 +25,17 @@ export const getAllApi = (serviceId) => {
     method: 'get'
   })
 }
+/**
+ * 获取所有接口1
+ */
+export const getAllApis = () => {
+  const params = {}
+  return request({
+    url: 'initial/api/list',
+    params: params,
+    method: 'get'
+  })
+}
 
 /**
  * 添加接口
@@ -38,7 +49,7 @@ export const getAllApi = (serviceId) => {
  * @param apiDesc
  * @param isAuth
  */
-export const addApi = ({ apiCode, apiName, apiCategory, serviceId, path, status, priority, apiDesc, isAuth, isOpen }) => {
+export const addApi = ({ apiCode, apiName, apiCategory, serviceId, path, status, priority, apiDesc, isAuth, isOpen, isEncrypt }) => {
   const data = {
     apiCode: apiCode,
     apiName: apiName,
@@ -49,7 +60,8 @@ export const addApi = ({ apiCode, apiName, apiCategory, serviceId, path, status,
     priority: priority,
     apiDesc: apiDesc,
     isAuth: isAuth,
-    isOpen: isOpen
+    isOpen: isOpen,
+    isEncrypt: isEncrypt
   }
   return request({
     url: 'base/api/add',
@@ -71,7 +83,7 @@ export const addApi = ({ apiCode, apiName, apiCategory, serviceId, path, status,
  * @param apiDesc
  * @param isAuth
  */
-export const updateApi = ({ apiId, apiCode, apiName, apiCategory, serviceId, path, status, priority, apiDesc, isAuth, isOpen }) => {
+export const updateApi = ({ apiId, apiCode, apiName, apiCategory, serviceId, path, status, priority, apiDesc, isAuth, isOpen, isEncrypt }) => {
   const data = {
     apiId: apiId,
     apiCode: apiCode,
@@ -83,7 +95,8 @@ export const updateApi = ({ apiId, apiCode, apiName, apiCategory, serviceId, pat
     priority: priority,
     apiDesc: apiDesc,
     isAuth: isAuth,
-    isOpen: isOpen
+    isOpen: isOpen,
+    isEncrypt: isEncrypt
   }
   return request({
     url: 'base/api/update',
@@ -149,6 +162,22 @@ export const batchUpdateStatusApi = ({ ids, status }) => {
   }
   return request({
     url: 'base/api/batch/update/status',
+    data,
+    method: 'post'
+  })
+}
+
+/**
+ * 批量修改是否加密
+ * @param ids
+ */
+export const batchUpdateEncApi = ({ ids, encrypt }) => {
+  const data = {
+    ids: ids.join(','),
+    encrypt: encrypt
+  }
+  return request({
+    url: 'base/api/batch/update/encrypts',
     data,
     method: 'post'
   })

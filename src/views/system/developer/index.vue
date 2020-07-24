@@ -16,8 +16,7 @@
       <el-form-item style="margin-left:40px">
         <el-button type="primary" @click="handleSearch(1)">查询</el-button>
         <el-button type="default" @click="handleResetForm('searchForm')">重置</el-button>
-        <!-- <el-button :disabled="hasAuthority('developerEdit')?false:true" type="primary" @click="handleModal()"></el-button> -->
-        <el-button type="primary" @click="handleModal()">添加</el-button>
+        <el-button :disabled="hasAuthority('developerEdit')?false:true" type="primary" @click="handleModal()">添加</el-button>
       </el-form-item>
     </el-form>
     <!--应用详情-->
@@ -33,24 +32,32 @@
       <el-table-column prop="mobile" label="手机号" width="200">
       </el-table-column>
       <el-table-column prop="status" label="状态" width="100">
+        <template slot-scope="scope">
+          <el-badge is-dot v-if="scope.row.status===1" type="success"></el-badge>
+          <el-badge is-dot v-else-if="scope.row.status===2" type="warning"></el-badge>
+          <el-badge is-dot v-else="" type="danger"></el-badge>
+          <span v-if="scope.row.status===1">正常</span>
+          <span v-else-if="scope.row.status===2">锁定</span>
+          <span v-else="">禁用</span>
+        </template>
       </el-table-column>
       <el-table-column prop="userType" label="开发者类型" width="150">
       </el-table-column>
       <el-table-column prop="createTime" label="注册时间" width="180">
       </el-table-column>
-      <el-table-column prop="userDesc" label="描述" width="220">
-      </el-table-column>
+      <!-- <el-table-column prop="userDesc" label="描述" width="220">
+      </el-table-column> -->
       <el-table-column label="操作" fixed="right" width="140">
         <template slot-scope="scope">
           <a :disabled="hasAuthority('developerEdit')?false:true" @click="handleModal(scope.row)" class="linkfont">编辑</a>&nbsp;
-          <!-- <el-dropdown v-show="hasAuthority('developerEdit')" ref="dropdown" @on-click="handleClick($event,scope.row)"> -->
-          <el-dropdown ref="dropdown" @on-click="handleClick($event,scope.row)">
+          <el-dropdown v-show="hasAuthority('developerEdit')" ref="dropdown" @command="handleClick">
+          <!-- <el-dropdown ref="dropdown" @on-click="handleClick($event,scope.row)"> -->
             <a href="javascript:void(0)">
               <span class="linkfont">更多</span>
               <i class="el-icon-arrow-down el-icon--right"></i>
             </a>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item name="sendToEmail">发送到密保邮箱</el-dropdown-item>
+              <el-dropdown-item :command="composeValue('sendToEmail',scope.row)">发送到密保邮箱</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </template>
@@ -70,8 +77,10 @@
           <el-form v-show="current=='form1'" ref="form1" :model="formItem" :rules="formItemRules" label-width="120px">
             <el-form-item label="开发者类型" prop="userType">
               <template>
-                <el-radio v-model="formItem.userType" label="isp">服务提供商</el-radio>
-                <el-radio v-model="formItem.userType" label="normal">自研开发者</el-radio>
+                <el-radio-group v-model="formItem.userType">
+                  <el-radio label="isp">服务提供商</el-radio>
+                  <el-radio label="normal">自研开发者</el-radio>
+                </el-radio-group>
               </template>
             </el-form-item>
             <el-form-item label="昵称" prop="nickName">
@@ -95,9 +104,9 @@
             </el-form-item>
             <el-form-item label="状态" prop="status">
               <el-radio-group v-model="formItem.status" size="small">
-                <el-radio-button label="禁用" value="0"></el-radio-button>
-                <el-radio-button label="正常" value="1"></el-radio-button>
-                <el-radio-button label="锁定" value="2"></el-radio-button>
+                <el-radio-button label="0">禁用</el-radio-button>
+                <el-radio-button label="1">正常</el-radio-button>
+                <el-radio-button label="2">锁定</el-radio-button>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="描述" prop="userDesc">
@@ -106,8 +115,8 @@
           </el-form>
         </el-tab-pane>
         <!--  修改密码-->
-        <!-- <el-tab-pane :disabled="!formItem.userId" label="修改密码" name="form2"> -->
-        <el-tab-pane label="修改密码" name="form2">
+        <el-tab-pane :disabled="!formItem.userId" label="修改密码" name="form2">
+        <!-- <el-tab-pane label="修改密码" name="form2"> -->
           <el-form v-show="current == 'form2'" ref="form2" :model="formItem" :rules="formItemRules" label-width="120px">
             <el-form-item label="登录名" prop="userName">
               <el-input :disabled="formItem.userId?true:false" v-model="formItem.userName" placeholder="请输入内容" clearable>
@@ -200,9 +209,11 @@
         selectRoles: [],
         pageInfo: {
           page: 1,
-          pageSize: 10,
-          sort: "createTime",
-          order: "desc"
+          limit: 10,
+          total: 0,
+          userName:'',
+          mobile:'',
+          email:'',
         },
         formItemRules: {
           userType: [{
@@ -377,7 +388,10 @@
               if (this.formItem.userId) {
                 updateDeveloper(this.formItem).then(res => {
                   if (res.code === 0) {
-                    this.$Message.success('保存成功')
+                    this.$message({
+                type: 'success',
+                message: '保存成功'
+              })
                     this.handleReset()
                   }
                   this.handleSearch()
@@ -387,7 +401,10 @@
               } else {
                 addDeveloper(this.formItem).then(res => {
                   if (res.code === 0) {
-                    this.$Message.success('保存成功')
+                    this.$message({
+                type: 'success',
+                message: '保存成功'
+              })
                     this.handleReset()
                   }
                   this.handleSearch()
@@ -408,7 +425,10 @@
                 password: this.formItem.password
               }).then(res => {
                 if (res.code === 0) {
-                  this.$Message.success('修改成功')
+                  this.$message({
+                type: 'success',
+                message: '修改成功'
+              })
                   this.handleReset()
                 }
                 this.handleSearch()
@@ -435,13 +455,13 @@
        * @description 设置el-table内容居中
        */
       cellstyle() {
-        return "text-align:center;margin:0;padding:8px 0px 0px 0px";
+        return "padding-left: 10px;padding-right: 10px;";
       },
       /**
        * @description 设置el-table表头居中
        */
       rowClass() {
-        return "text-align:center";
+        return "background:#f8f8f9;color:#515a6e;padding-left: 10px;padding-right: 10px;";
       },
       handlePage(current) {
         this.pageInfo.page = current
@@ -451,11 +471,21 @@
         this.pageInfo.limit = size
         this.handleSearch()
       },
-      handleClick(name, row) {
-        switch (name) {
+      handleClick(command) {
+        
+        switch (command.button) {
           case 'sendToEmail':
-            this.$Message.warning("发送至密保邮箱,开发中...")
+            this.$message({
+                type: 'warning',
+                message: '发送至密保邮箱,开发中...'
+              })
             break
+        }
+      },
+      composeValue(item, row){
+        return {
+        'button': item,
+        'row': row
         }
       },
       handleTabClick(name) {
@@ -464,7 +494,7 @@
       }
     },
     mounted: function () {
-      // this.handleSearch()
+      this.handleSearch()
     }
   }
 
@@ -472,8 +502,8 @@
 
 <style scoped>
    .linkfont {
-    color: #0000CC;
-    font-size: 12px;
+    color: #409EFF;
+    font-size: 14px;
   }
   .form-btn-box {
     width: 90%;

@@ -1,3 +1,7 @@
+import {
+  getMenuByRouter
+} from '@/utils//util'
+import routers from '@/router/routers'
 const getters = {
   sidebar: state => state.app.sidebar,
   // device: state => state.app.device,
@@ -30,6 +34,7 @@ const getters = {
   menuAll: state => state.user.menuAll,
   logsList: state => state.logs.logsList,
   logsLen: state => state.logs.logsList.length || 0,
-  logsFlag: (state, getters) => getters.logsLen === 0
+  logsFlag: (state, getters) => getters.logsLen === 0,
+  menuList: (state, getters, rootState) => getMenuByRouter(routers, rootState.user.access)
 }
 export default getters

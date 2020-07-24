@@ -1,6 +1,11 @@
 /**
- * Created by PanJiaChen on 16/11/18.
+ * Created by phc
  */
+
+// const clientNoPattern = /^[0-9]+$/ // 客户号数字正则
+// const cardNoPattern = /^([1-9]{1})(\d{15}|\d{18})$/ // 银行卡号正则
+// const phoneNoPattern = /^1[3-9]\d{9}$/ // 手机号码正则
+// const msgNoPattern = /^[0-9]{6}$/ // 短信验证码正则
 
 /**
  * @param {string} path
@@ -22,7 +27,7 @@ export function validUsername(str) {
 /**
  * 判断是否为空
  */
-export function validatenull (val) {
+export function validatenull(val) {
   if (typeof val === 'boolean') {
     return false
   }
@@ -30,11 +35,11 @@ export function validatenull (val) {
     return false
   }
   if (val instanceof Array) {
-    if (val.length == 0) return true
+    if (val.length === 0) return true
   } else if (val instanceof Object) {
     if (JSON.stringify(val) === '{}') return true
   } else {
-    if (val == 'null' || val == null || val == 'undefined' || val == undefined || val == '') return true
+    if (val === 'null' || val == null || val === 'undefined' || val === undefined || val === '') return true
     return false
   }
   return false

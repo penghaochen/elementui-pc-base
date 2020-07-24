@@ -1,7 +1,7 @@
 <template>
   <div :class="classObj" class="app-wrapper">
     <!-- 手机端打开左侧菜单添加遮罩 点击遮罩来关闭左侧菜单 -->
-    <div v-if="device==='mobile'&&sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
+    <div v-if="device==='mobile'&&app.sidebar.opened" class="drawer-bg" @click="handleClickOutside" />
     <!-- 左侧菜单组件 -->
     <sidebar class="sidebar-container" />
     <div :class="{hasTagsView:needTagsView}" class="main-container">
@@ -9,7 +9,7 @@
         <navbar />
         <tags-view v-if="needTagsView" />
       </div>
-      <app-main :height="needTagsView?'90':'54'"/>
+      <app-main :height="needTagsView?'90':'54'" />
 
     </div>
   </div>
@@ -20,7 +20,7 @@
  * @description 布局模板
  */
 
-import { Navbar, Sidebar, AppMain ,TagsView} from './components'
+import { Navbar, Sidebar, AppMain, TagsView } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 import { mapState } from 'vuex'
 

@@ -4,9 +4,8 @@
  * @version 0.1.0
  */
 
-// import CryptoJS from './node_modules/crypto-js'
-import CryptoJS from '../../../node_modules/crypto-js'
-export function encrypt(message, secret_key) {
+import CryptoJS from 'crypto-js'
+export function encrypt (message, secret_key) {
   secret_key = secret_key || 'f7244837c4701df4f47e540682405e5e'
   // 偏移量
   let iv = ''
@@ -24,7 +23,7 @@ export function encrypt(message, secret_key) {
   return ciphertext.toString()
 }
 
-export function decrypt(message, secret_key) {
+export function decrypt (message, secret_key) {
   secret_key = secret_key || 'f7244837c4701df4f47e540682405e5e'
   var key = CryptoJS.enc.Latin1.parse(secret_key)
   var decrypt = CryptoJS.AES.decrypt(message, key, { iv: key, mode: CryptoJS.mode.CBC, padding: CryptoJS.pad.Pkcs7 })

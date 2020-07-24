@@ -1,7 +1,7 @@
 'use strict'
 const path = require('path')
 const webpack = require('webpack')
-const defaultSettings = require('./src/settings/index.js')
+const defaultSettings = require('./src/settings/defaultSetting.js')
 
 function resolve(dir) {
   return path.join(__dirname, dir)
@@ -40,14 +40,13 @@ module.exports = {
     proxy: {
       // change xxx-api/login => mock/login
       // detail: https://cli.vuejs.org/config/#devserver-proxy
-      [process.env.VUE_APP_BASE_API]: {
-        // target: `http://0.0.0.0:${port}/mock`, // 本地mock数据
-        // target:'http://192.168.228.35:9999',// 服务地址
-        target: 'http://192.168.228.212:9999', // 服务地址
+      '/pmobile': {
+        target: `http://0.0.0.0:${port}/mock`, // 本地mock数据
+        // target: 'http://192.168.228.216:8888', // 服务地址
         changeOrigin: true,
         ws: true,
         pathRewrite: {
-          ['^' + process.env.VUE_APP_BASE_API]: ''
+          '^/pmobile': ''
         }
       }
     },

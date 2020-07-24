@@ -1,8 +1,8 @@
 /**
  * 权限管理
  */
-// import request from '@/libs/request'
 import request from '@/utils/request'
+
 /**
  * 获取用户已分配权限
  * @param userId

@@ -1,5 +1,5 @@
 <template>
-  <section class="app-main" :style="{'padding-top':height+'px'}">
+  <section class="app-main" :style="{'padding-top':'0px'}">
     <transition name="fade-transform" mode="out-in">
       <router-view :key="key" />
     </transition>
@@ -12,7 +12,8 @@ export default {
   props:{
     height: {
       type: String,
-      default: '50'
+      default: '0'
+      // default: '50'
     },
   },
   computed: {

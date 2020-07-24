@@ -1,5 +1,5 @@
-// import request from '@/libs/request'
 import request from '@/utils/request'
+
 /**
  * 获取菜单下操作列表
  * @param menuId

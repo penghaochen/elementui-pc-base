@@ -1,6 +1,6 @@
 
 import Vue from 'vue'
-import Vuex from 'vuex'
+import store from '@/store' // 缓存数据
 /**
  * 按钮全新控制
  *authorities 多个用,号隔开
@@ -9,11 +9,11 @@ import Vuex from 'vuex'
  * @param authorities
  * @returns {boolean}
  */
-Vue.prototype.hasAuthority = function (authorities) {
-    if (!authorities) {
-      return false
-    }
-    return authorities.split(',').some(item => {
-    //   return store.state.user.access.includes("ACTION_"+item)
-    })
+Vue.prototype.hasAuthority = function(authorities) {
+  if (!authorities) {
+    return false
   }
+  return authorities.split(',').some(item => {
+    return store.state.user.access.includes('ACTION_' + item)
+  })
+}

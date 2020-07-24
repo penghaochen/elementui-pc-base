@@ -3,36 +3,44 @@
  * @author digua
  * @version 0.1.0
  */
-import '@babel/polyfill'
-import Vue from 'vue'
+import Vue from 'vue'// vue核心包
+import '@babel/polyfill'// 兼容旧浏览器
 
 import 'normalize.css/normalize.css' // 保持浏览器的一些默认样式
+
 import '@/styles/index.scss' // 公共样式
-import '@/styles/base.scss' // 公共样式
+
 import App from './App' // 入口页面
 import store from './store' // 缓存数据
 import router from './router/router.config' // 路由配置
-import basicContainer from './components/BasicContainer/main' // 主界面容器模板
 
-import TreeTable from 'tree-table-vue'
-import prototype from '@/utils/prototype' // 原型方法
+import config from '@/settings/defaultSetting'
 
 import i18n from './i18n/'// 国际化文件配置
-import '@/filter/filter.config' // 公共过滤器
-import mixin from '@/mixin/routerMixin' // 路由拦截器配置
-import config from '@/settings/defaultSetting' // 添加公共配置文件
+import mixin from '@/mixin/routerMixin' // 混入公共处理方法
+// import config from '@/settings/defaultSetting' // 添加公共配置文件
 import '@/utils/validate'// 验证规则
+import '@/utils/prototype' // 原型方法
 
-import '@/icons' // 图标
+// import '@/icons' // 图标
 import '@/permission' // 权限控制
 
-import ElementUI from 'element-ui';
-import 'element-ui/lib/theme-chalk/index.css';
-Vue.use(ElementUI);
-Vue.mixin(mixin)
+import basicContainer from './components/BasicContainer/main' // 主界面容器模板
 
+Vue.component('basicContainer', basicContainer)// 注册全局容器
 
+import ElementUI from 'element-ui'// elementui组件库
+import 'element-ui/lib/theme-chalk/index.css'
+
+import TreeTable from 'tree-table-vue'// 树形组件
 Vue.component(TreeTable.name, TreeTable)
+
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'// 树形选择框组件
+import Treeselect from '@riophae/vue-treeselect'
+Vue.component('treeselect', Treeselect)
+
+Vue.use(ElementUI)
+Vue.mixin(mixin)
 
 /**
  * If you don't want to use mock-server
@@ -51,22 +59,15 @@ if (process.env.NODE_ENV === 'development') {
 // 使用mock数据 放开注释
   mockXHR()
 }
-// 注册全局容器
-Vue.component('basicContainer', basicContainer)
 
-
-// 注册elementui框架 设置国际化
-// Vue.use(ElementUI, {
-// })
 // 是否启动生产信息提示
 Vue.config.productionTip = false
+/**
+ * @description 全局注册应用配置
+ */
+Vue.prototype.$config = config
+
 // vue实例化
-// new Vue({
-//   el: '#app',
-//   router,
-//   store,
-//   render: h => h(App)
-// })
 
 const opt = {
   router,

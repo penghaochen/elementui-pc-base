@@ -14,7 +14,7 @@ import pathToRegexp from 'path-to-regexp'
 import elBreadcrumb from './breadcrumb'
 import elBreadcrumbItem from './breadcrumb-item'
 export default {
-  components: { elBreadcrumb, elBreadcrumbItem},
+  components: { elBreadcrumb, elBreadcrumbItem },
   data() {
     return {
       levelList: null
@@ -48,7 +48,6 @@ export default {
       return name.trim().toLocaleLowerCase() === 'Dashboard'.toLocaleLowerCase()
     },
     pathCompile(path) {
-      // To solve this problem https://github.com/PanJiaChen/vue-element-admin/issues/561
       const { params } = this.$route
       var toPath = pathToRegexp.compile(path)
       return toPath(params)

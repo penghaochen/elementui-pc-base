@@ -5,7 +5,7 @@
 const accNoSpcFilter = (value) =>
   value ? value.replace(/(.{4})/g, '$1 ') : value
 
-  /**
+/**
  * 账户格式化，去除四位一空格
  * @author：feifei
  */

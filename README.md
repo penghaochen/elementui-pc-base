@@ -1,5 +1,5 @@
-# openBankSeed
-    介绍：vue项目
+# project-pc-base
+    介绍：基于elementui的vue后管工程
 
 ## Build Setup
 
@@ -9,7 +9,7 @@
 git clone XXXXX.git
 
 # 进入项目目录
-cd vue-admin-template
+cd XXX
 
 # 安装依赖
 npm install

@@ -1,7 +1,21 @@
-// import request from '@/libs/request'
 import request from '@/utils/request'
-// import { getToken } from '@/libs/util'
 import { getToken } from '@/utils/util'
+/**
+ * 用户登录
+ * @param username
+ * @param password
+ */
+export const login = ({ username, password }) => {
+  const data = {
+    username,
+    password
+  }
+  return request({
+    url: 'admin/login/token',
+    data,
+    method: 'post'
+  })
+}
 
 /**
  * 登出
@@ -9,7 +23,7 @@ import { getToken } from '@/utils/util'
 export const logout = () => {
   return request({
     url: 'admin/logout/token',
-    // data: { token: getToken() },
+    data: { token: getToken() },
     method: 'post'
   })
 }

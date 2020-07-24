@@ -4,59 +4,60 @@
     <!-- 搜索模块 -->
     <el-form :inline="true" :model="pageInfo" size="small" class="demo-form-inline form-btn-box" ref="searchForm"
       label-width="80px" style="margin-bottom:30px">
-      <el-form-item label="登录名" prop="userName">
-        <el-input v-model="pageInfo.userName" placeholder="请输入关键字" clearable></el-input>
+      <el-form-item label="角色名称" prop="roleName">
+        <el-input v-model="pageInfo.roleName" placeholder="请输入关键字" clearable></el-input>
       </el-form-item>
-      <el-form-item label="手机号" prop="mobile">
-        <el-input v-model="pageInfo.mobile" placeholder="请输入关键字" clearable></el-input>
-      </el-form-item>
-      <el-form-item label="邮箱" prop="email">
-        <el-input v-model="pageInfo.email" placeholder="请输入关键字" clearable></el-input>
+      <el-form-item label="角色编码" prop="roleCode">
+        <el-input v-model="pageInfo.roleCode" placeholder="请输入关键字" clearable></el-input>
       </el-form-item>
       <el-form-item style="margin-left:40px">
         <el-button type="primary" @click="handleSearch(1)">查询</el-button>
         <el-button type="default" @click="handleResetForm('searchForm')">重置</el-button>
-        <!-- <el-button :disabled="hasAuthority('systemUserEdit')?false:true" type="primary" @click="handleModal()">添加</el-button> -->
-        <el-button type="primary" @click="handleModal()">添加</el-button>
+        <el-button :disabled="hasAuthority('systemRoleEdit')?false:true" type="primary" @click="handleModal()">添加</el-button>
+        <!-- <el-button type="primary" @click="handleModal()">添加</el-button> -->
       </el-form-item>
     </el-form>
     <!-- <div style="margin-bottom:20px">
-      <el-button :disabled="hasAuthority('systemUserEdit')?false:true" type="primary" @click="handleModal()">添加
+      <el-button :disabled="hasAuthority('systemRoleEdit')?false:true" type="primary" @click="handleModal()">添加
       </el-button>
     </div> -->
     <!--应用详情-->
     <el-table :data="data" :loading="loading" border :cell-style="cellstyle" :header-cell-style="rowClass" size="small">
       <el-table-column type="selection" width="60">
       </el-table-column>
-      <el-table-column prop="userName" label="登录名" width="200">
+      <el-table-column prop="roleName" label="角色名称" width="200">
       </el-table-column>
-      <el-table-column prop="nickName" label="昵称" width="150">
+      <el-table-column prop="roleCode" label="角色编码" width="200">
       </el-table-column>
-      <el-table-column prop="email" label="邮箱" width="200">
+      <!-- <el-table-column prop="status" label="状态" width="200">
+        <template slot-scope="scope">
+          {{ scope.row.status | statusFilter }}
+        </template>
+      </el-table-column> -->
+      <el-table-column prop="status" label="状态" width="200">
+        <template slot-scope="scope">
+          <el-tag :type="scope.row.status === 0 ? 'danger' : 'success'" disable-transitions>{{scope.row.status | statusFilter}}</el-tag>
+        </template>
       </el-table-column>
-      <el-table-column prop="mobile" label="手机号" width="200">
+      <el-table-column prop="updateTime" label="最后修改时间" width="200">
       </el-table-column>
-      <el-table-column prop="status" label="状态" width="100">
-      </el-table-column>
-      <el-table-column prop="userType" label="用户类型" width="150">
-      </el-table-column>
-      <el-table-column prop="createTime" label="注册时间" width="180">
-      </el-table-column>
-      <el-table-column prop="userDesc" label="描述" width="220">
+      <el-table-column prop="roleDesc" label="描述" width="200">
       </el-table-column>
       <el-table-column label="操作" fixed="right" width="140">
         <template slot-scope="scope">
-          <a :disabled="hasAuthority('systemUserEdit')?false:true" @click="handleModal(scope.row)" class="linkfont">编辑</a>&nbsp;
-          <!-- <el-dropdown v-show="hasAuthority('systemUserEdit')" ref="dropdown" @on-click="handleClick($event,scope.row)"> -->
-          <el-dropdown ref="dropdown" @on-click="handleClick($event,scope.row)">
-            <a href="javascript:void(0)">
+          <a @click="handleModal(scope.row)"
+            :disabled="scope.row.roleCode != 'all' && hasAuthority('systemRoleEdit')?false:true"
+            class="linkfont">编辑</a>&nbsp;
+          <el-dropdown v-show="hasAuthority('systemRoleEdit')" ref="dropdown" @command="handleClick">
+          <!-- <el-dropdown ref="dropdown" @on-click="handleClick($event,scope.row)"> -->
+            <a href="javascript:void(0)" :disabled="scope.row.roleCode === 'all' ?true:false">
               <span class="linkfont">更多</span>
               <i class="el-icon-arrow-down el-icon--right"></i>
             </a>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item name="sendToEmail">发送到密保邮箱</el-dropdown-item>
+              <el-dropdown-item :command="composeValue('remove',scope.row)">删除角色</el-dropdown-item>
             </el-dropdown-menu>
-          </el-dropdown>
+          </el-dropdown>&nbsp;
         </template>
       </el-table-column>
     </el-table>
@@ -67,67 +68,34 @@
       </el-pagination>
     </el-col>
     <!--编辑弹框-->
-    <el-dialog :title="modalTitle" :visible.sync="modalVisible" width="50%" :before-close="handleReset">
+    <el-dialog :title="modalTitle" :visible.sync="modalVisible" width="70%" :before-close="handleReset">
       <el-tabs v-model="current" @tab-click="handleTabClick">
-        <!--  用户信息菜单-->
-        <el-tab-pane label="用户信息" name="form1">
+        <!--  角色信息菜单-->
+        <el-tab-pane label="角色信息" name="form1">
           <el-form v-show="current=='form1'" ref="form1" :model="formItem" :rules="formItemRules" label-width="120px">
-            <el-form-item label="用户类型" prop="userType">
-              <template>
-                <el-radio v-model="formItem.userType" label="1">超级管理员</el-radio>
-                <el-radio v-model="formItem.userType" label="2">普通管理员</el-radio>
-              </template>
+            <el-form-item label="角色标识" prop="roleCode">
+              <el-input v-model="formItem.roleCode" placeholder="请输入内容" clearable></el-input>
             </el-form-item>
-            <el-form-item label="昵称" prop="nickName">
-              <el-input v-model="formItem.nickName" placeholder="请输入内容" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="登录名" prop="userName">
-              <el-input :disabled="formItem.userId?true:false" v-model="formItem.userName" placeholder="请输入内容"
-                clearable></el-input>
-            </el-form-item>
-            <el-form-item v-if="formItem.userId?false:true" label="登录密码" prop="password">
-              <el-input type="password" v-model="formItem.password" placeholder="请输入内容" clearable></el-input>
-            </el-form-item>
-            <el-form-item v-if="formItem.userId?false:true" label="再次确认密码" prop="passwordConfirm">
-              <el-input type="password" v-model="formItem.passwordConfirm" placeholder="请输入内容" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="邮箱" prop="email">
-              <el-input v-model="formItem.email" placeholder="请输入内容" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="手机号" prop="mobile">
-              <el-input v-model="formItem.mobile" placeholder="请输入内容" clearable></el-input>
+            <el-form-item label="角色名称" prop="roleName">
+              <el-input v-model="formItem.roleName" placeholder="请输入内容" clearable></el-input>
             </el-form-item>
             <el-form-item label="状态" prop="status">
               <el-radio-group v-model="formItem.status" size="small">
-                <el-radio-button label="禁用" value="0"></el-radio-button>
-                <el-radio-button label="正常" value="1"></el-radio-button>
-                <el-radio-button label="锁定" value="2"></el-radio-button>
+                <el-radio-button label="0">禁用</el-radio-button>
+                <el-radio-button label="1">启用</el-radio-button>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="描述" prop="userDesc">
-              <el-input v-model="formItem.userDesc" placeholder="请输入内容" clearable type="textarea"></el-input>
-            </el-form-item>
-          </el-form>
-        </el-tab-pane>
-        <!--  分配角色菜单-->
-        <!-- <el-tab-pane :disabled="!formItem.userId" label="分配角色" name="form2"> -->
-        <el-tab-pane label="分配角色" name="form2">
-          <el-form v-show="current == 'form2'" ref="form2" :model="formItem" label-width="120px" :rules="formItemRules">
-            <el-form-item label="分配角色" prop="grantRoles">
-              <el-checkbox-group v-model="formItem.grantRoles">
-                <el-checkbox v-for="item in selectRoles" :label="item.roleId"><span>{{ item.roleName }}</span>
-                </el-checkbox>
-              </el-checkbox-group>
+            <el-form-item label="描述" prop="roleDesc">
+              <el-input v-model="formItem.roleDesc" placeholder="请输入内容" clearable type="textarea"></el-input>
             </el-form-item>
           </el-form>
         </el-tab-pane>
         <!--  分配权限菜单-->
-        <!-- <el-tab-pane :disabled="!formItem.userId" label="分配权限" name="form3"> -->
-        <el-tab-pane label="分配权限" name="form3">
-          <el-alert title='支持用户单独分配功能权限(除角色已经分配菜单功能,禁止勾选!)' type="info" show-icon></el-alert>
-          <el-form v-show="current == 'form3'" ref="form3" :model="formItem" :rules="formItemRules" label-width="120px">
+        <el-tab-pane :disabled="!formItem.roleId" label="分配权限" name="form2">
+        <!-- <el-tab-pane label="分配权限" name="form2"> -->
+          <el-form v-show="current == 'form2'" ref="form2" :model="formItem" :rules="formItemRules" label-width="120px">
             <el-form-item label="过期时间" prop="expireTime">
-              <el-badge v-if="formItem.isExpired" text="授权已过期">
+              <el-badge is-dot v-if="formItem.isExpired" text="授权已过期">
                 <el-date-picker v-model="formItem.expireTime" class="ivu-form-item-error" type="datetime"
                   placeholder="设置有效期">
                 </el-date-picker>
@@ -139,29 +107,23 @@
               <tree-table ref="tree" style="max-height:450px;overflow: auto" expand-key="menuName" :expand-type="false"
                 :is-fold="false" :tree-type="true" :selectable="true" :columns="columns2" :data="selectMenus">
                 <template slot="operation" slot-scope="scope">
-                  <CheckboxGroup v-model="formItem.grantActions">
-                    <Checkbox :disabled="item.disabled" v-for="item in scope.row.actionList" :label="item.authorityId">
+                  <el-checkbox-group v-model="formItem.grantActions">
+                    <el-checkbox v-for="(item,index) in scope.row.actionList" :label="item.authorityId" :key="index">
                       <span :title="item.actionDesc">{{item.actionName}}</span>
-                    </Checkbox>
-                  </CheckboxGroup>
+                    </el-checkbox>
+                  </el-checkbox-group>
                 </template>
               </tree-table>
             </el-form-item>
           </el-form>
         </el-tab-pane>
-        <!--  修改密码-->
-        <!-- <el-tab-pane :disabled="!formItem.userId" label="修改密码" name="form4"> -->
-        <el-tab-pane label="修改密码" name="form4">
-          <el-form v-show="current == 'form4'" ref="form4" :model="formItem" :rules="formItemRules" label-width="120px">
-            <el-form-item label="登录名" prop="userName">
-              <el-input :disabled="formItem.userId?true:false" v-model="formItem.userName" placeholder="请输入内容" clearable>
-              </el-input>
-            </el-form-item>
-            <el-form-item label="登录密码" prop="password">
-              <el-input type="password" v-model="formItem.password" placeholder="请输入内容" clearable></el-input>
-            </el-form-item>
-            <el-form-item label="再次确认密码" prop="passwordConfirm">
-              <el-input type="password" v-model="formItem.passwordConfirm" placeholder="请输入内容" clearable></el-input>
+        <!--  角色成员菜单-->
+        <el-tab-pane :disabled="!formItem.roleId" label="角色成员" name="form3">
+        <!-- <el-tab-pane label="角色成员" name="form3"> -->
+          <el-form v-show="current == 'form3'" ref="form3" :model="formItem" :rules="formItemRules" label-width="120px">
+            <el-form-item prop="authorities">
+              <el-transfer :data="selectUsers" :titles="['选择用户', '已选择用户']" :render-content="transferRender"
+                v-model="formItem.userIds" @change="handleTransferChange" filterable></el-transfer>
             </el-form-item>
           </el-form>
         </el-tab-pane>
@@ -175,18 +137,30 @@
 </template>
 
 <script>
-  import {getRoles, updateRole, addRole, removeRole, getRoleUsers, addRoleUsers} from '@/api/role'
-  import {getAllUsers} from '@/api/user'
+  import {
+    getRoles,
+    updateRole,
+    addRole,
+    removeRole,
+    getRoleUsers,
+    addRoleUsers
+  } from '@/api/role'
+  import {
+    getAllUsers
+  } from '@/api/user'
   import {
     getAuthorityMenu,
     getAuthorityRole,
     grantAuthorityRole
   } from '@/api/authority'
-  import {startWith, listConvertTree} from '@/utils/util'
+  import {
+    startWith,
+    listConvertTree
+  } from '@/utils/util'
 
   export default {
     name: 'SystemRole',
-    data () {
+    data() {
       const validateEn = (rule, value, callback) => {
         let reg = /^[_a-zA-Z0-9]+$/
         if (value === '') {
@@ -224,12 +198,16 @@
           roleName: ''
         },
         formItemRules: {
-          roleCode: [
-            {required: true, validator: validateEn, trigger: 'blur'}
-          ],
-          roleName: [
-            {required: true, message: '角色名称不能为空', trigger: 'blur'}
-          ]
+          roleCode: [{
+            required: true,
+            validator: validateEn,
+            trigger: 'blur'
+          }],
+          roleName: [{
+            required: true,
+            message: '角色名称不能为空',
+            trigger: 'blur'
+          }]
         },
         formItem: {
           roleId: '',
@@ -246,8 +224,7 @@
           isExpired: false,
           userIds: []
         },
-        columns: [
-          {
+        columns: [{
             type: 'selection',
             width: 60,
             align: 'center'
@@ -267,8 +244,7 @@
             slot: 'status',
             key: 'status',
             width: 100,
-            filters: [
-              {
+            filters: [{
                 label: '禁用',
                 value: 0
               },
@@ -278,7 +254,7 @@
               }
             ],
             filterMultiple: false,
-            filterMethod (value, row) {
+            filterMethod(value, row) {
               if (value === 0) {
                 return row.status === 0
               } else if (value === 1) {
@@ -302,8 +278,7 @@
             width: 150
           }
         ],
-        columns2: [
-          {
+        columns2: [{
             title: '菜单',
             key: 'menuName',
             minWidth: '250px',
@@ -315,11 +290,27 @@
             minWidth: '200px'
           }
         ],
-        data: []
+        data: [{status:1}, {status:0}]
       }
     },
+    filters: {
+      statusFilter(val) {
+        let res = ''
+        switch (val) {
+          case 1:
+            res = "启用"
+            break;
+          case 0:
+            res = "禁用"
+            break;
+          default:
+            res = "——"
+        }
+        return res
+      },
+    },
     methods: {
-      handleModal (data) {
+      handleModal(data) {
         if (data) {
           this.formItem = Object.assign({}, this.formItem, data)
         }
@@ -337,14 +328,14 @@
         }
         this.formItem.status = this.formItem.status + ''
       },
-      handleResetForm (form) {
+      handleResetForm(form) {
         this.$refs[form].resetFields()
       },
-      handleTabClick(name){
+      handleTabClick(name) {
         // this.current = name
         this.handleModal();
       },
-      handleReset () {
+      handleReset() {
         const newData = {
           roleId: '',
           roleCode: '',
@@ -371,7 +362,7 @@
         this.modalVisible = false
         this.saving = false
       },
-      handleSubmit () {
+      handleSubmit() {
         if (this.current === this.forms[0]) {
           this.$refs[this.current].validate((valid) => {
             if (valid) {
@@ -379,7 +370,11 @@
               if (this.formItem.roleId) {
                 updateRole(this.formItem).then(res => {
                   if (res.code === 0) {
-                    this.$Message.success('保存成功')
+                    
+                    this.$message({
+                type: 'success',
+                message: '保存成功'
+              })
                     this.handleReset()
                   }
                   this.handleSearch()
@@ -389,7 +384,11 @@
               } else {
                 addRole(this.formItem).then(res => {
                   if (res.code === 0) {
-                    this.$Message.success('保存成功')
+                    
+                    this.$message({
+                type: 'success',
+                message: '保存成功'
+              })
                     this.handleReset()
                   }
                   this.handleSearch()
@@ -408,11 +407,16 @@
               this.saving = true
               grantAuthorityRole({
                 roleId: this.formItem.roleId,
-                expireTime: this.formItem.expireTime ? this.formItem.expireTime.pattern('yyyy-MM-dd HH:mm:ss') : '',
+                expireTime: this.formItem.expireTime ? this.formItem.expireTime.pattern('yyyy-MM-dd HH:mm:ss') :
+                  '',
                 authorityIds: authorityIds
               }).then(res => {
                 if (res.code === 0) {
-                  this.$Message.success('授权成功')
+                  
+                  this.$message({
+                type: 'success',
+                message: '授权成功'
+              })
                   this.handleReset()
                 }
                 this.handleSearch()
@@ -432,7 +436,11 @@
                 userIds: this.formItem.userIds
               }).then(res => {
                 if (res.code === 0) {
-                  this.$Message.success('保存成功')
+                  
+                  this.$message({
+                type: 'success',
+                message: '保存成功'
+              })
                   this.handleReset()
                 }
                 this.handleSearch()
@@ -443,7 +451,7 @@
           })
         }
       },
-      handleSearch (page) {
+      handleSearch(page) {
         if (page) {
           this.pageInfo.page = page
         }
@@ -455,33 +463,42 @@
           this.loading = false
         })
       },
-      handlePage (current) {
+      handlePage(current) {
         this.pageInfo.page = current
         this.handleSearch()
       },
-      handlePageSize (size) {
+      handlePageSize(size) {
         this.pageInfo.limit = size
         this.handleSearch()
       },
-      handleRemove (data) {
-        this.$Modal.confirm({
-          title: '确定删除吗？',
-          onOk: () => {
-            removeRole(data.roleId).then(res => {
+      handleRemove(data) {
+        this.$confirm('确定删除吗？', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          removeRole(data.roleId).then(res => {
               if (res.code === 0) {
                 this.pageInfo.page = 1
-                this.$Message.success('删除成功')
+                this.$message({
+                type: 'success',
+                message: '删除成功'
+              })
               }
               this.handleSearch()
             })
-          }
-        })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
       },
-      getCheckedAuthorities () {
+      getCheckedAuthorities() {
         const menus = this.$refs['tree'].getCheckedProp('authorityId')
         return menus.concat(this.formItem.grantActions)
       },
-      handleLoadRoleGranted (roleId) {
+      handleLoadRoleGranted(roleId) {
         if (!roleId) {
           return
         }
@@ -529,7 +546,7 @@
           that.modalVisible = true
         })
       },
-      handleLoadRoleUsers (roleId) {
+      handleLoadRoleUsers(roleId) {
         if (!roleId) {
           return
         }
@@ -558,43 +575,56 @@
           that.modalVisible = true
         })
       },
+      transferRender(h, option) {
+        
+        let ss=option.label
+        return <span title={ss}>{ option.label }</span>
+      },
+      handleTransferChange(newTargetKeys, direction, moveKeys) {
+        this.formItem.userIds = newTargetKeys
+      },
+      handleClick(command) {
+        
+        switch (command.button) {
+          case 'remove':
+            this.handleRemove(command.row)
+            break
+        }
+      },
+      composeValue(item, row){
+        return {
+        'button': item,
+        'row': row
+        }
+      },
+      filterTag(value, row) {
+        return row.status === value;
+      },
       /**
        * @description 设置el-table内容居中
        */
       cellstyle() {
-        return "text-align:center;margin:0;padding:8px 0px 0px 0px";
+        return "padding-left: 10px;padding-right: 10px;";
       },
       /**
        * @description 设置el-table表头居中
        */
       rowClass() {
-        return "text-align:center";
+        return "background:#f8f8f9;color:#515a6e;padding-left: 10px;padding-right: 10px;";
       },
-      transferRender (item) {
-        return `<span  title="${item.label}">${item.label}</span>`
-      },
-      handleTransferChange (newTargetKeys, direction, moveKeys) {
-        this.formItem.userIds = newTargetKeys
-      },
-      handleClick (name, row) {
-        switch (name) {
-          case 'remove':
-            this.handleRemove(row)
-            break
-        }
-      }
     },
     mounted: function () {
-      // this.handleSearch()
+      this.handleSearch()
     }
   }
 </script>
 
 <style scoped>
   .linkfont {
-    color: #0000CC;
-    font-size: 12px;
+    color: #409EFF;
+    font-size: 14px;
   }
+
   .form-btn-box {
     width: 90%;
   }
