@@ -42,7 +42,6 @@ export default [
   'el-icon-loading',
   'el-icon-folder-opened',
   'el-icon-connection',
-  'el-icon-map-location',
-
+  'el-icon-map-location'
 
 ]

@@ -1,86 +1,79 @@
 <template>
-  <div class="dashboard-container">
-    
-   
-    
-  </div>
+  <div class="dashboard-container" />
 </template>
 
 <script>
-  export default {
-    name: 'empty',
-    computed: {},
-    mounted() {
-      
+export default {
+  name: 'Empty',
+  filters: {
 
-    },
-    created() {
-      // 页面初始化
-      //   this.init();
-    },
-    filters: {
+  },
+  data() {
+    return {
+      // 表格高度
+      tableHeight: '300px',
+      // 分页条
+      listQuery: {
+        pageNum: 1, // 页码
+        pageRow: 10 // 每页条数
+      },
+      // 分页组件--数据总条数
+      totalCount: 0,
+      // 表格多选项
+      multipleSelection: [],
+      // 表格数据
+      tableData: [{}]
 
-    },
-    data() {
-      return {
-        // 表格高度
-        tableHeight: "300px",
-        //分页条
-        listQuery: {
-          pageNum: 1, //页码
-          pageRow: 10, //每页条数
-        },
-        //分页组件--数据总条数
-        totalCount: 0,
-        // 表格多选项
-        multipleSelection: [],
-        // 表格数据
-        tableData: [{}],
+    }
+  },
+  computed: {},
+  mounted() {
 
-
-      }
-
-    },
-    methods: {
-      /**
+  },
+  created() {
+    // 页面初始化
+    //   this.init();
+  },
+  methods: {
+    /**
        * @description 设置el-table内容居中
        */
-      cellStyle({
-        row,
-        column,
-        rowIndex,
-        columnIndex
-      }) {
-        return "text-align:center";
-      },
-      /**
+    cellStyle({
+      row,
+      column,
+      rowIndex,
+      columnIndex
+    }) {
+      return 'text-align:center'
+    },
+    /**
        * @description 设置el-table表头居中
        */
-      rowClass({
-        row,
-        column,
-        rowIndex,
-        columnIndex
-      }) {
-        return "text-align:center";
-      },
-      /**
+    rowClass({
+      row,
+      column,
+      rowIndex,
+      columnIndex
+    }) {
+      return 'text-align:center'
+    },
+    /**
        * @description 分页条size设置
        */
-      handleSizeChange(val) {
-        this.listQuery.pageRow = val;
-        // this.init();
-      },
-      /**
+    handleSizeChange(val) {
+      this.listQuery.pageRow = val
+      // this.init();
+    },
+    /**
        * @description 分页条num设置
        */
-      handleCurrentChange(val) {
-        this.listQuery.pageNum = val;
-        // this.init();
-      },
+    handleCurrentChange(val) {
+      this.listQuery.pageNum = val
+      // this.init();
+    }
 
-    },
   }
+}
 
 </script>
 
@@ -94,7 +87,6 @@
       font-size: 30px;
       line-height: 46px;
     }
-
 
   }
 

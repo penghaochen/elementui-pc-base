@@ -12,7 +12,7 @@
             :selectable="false"
             :columns="columns"
             :data="data"
-@radio-click="rowClick"
+            @radio-click="rowClick"
           >
             <template slot="status" slot-scope="scope">
               <el-badge v-if="scope.row.status===1" is-dot type="success" />
@@ -128,8 +128,7 @@
 
 <script>
 import {
-  listConvertTree,
-  updateTreeNode
+  listConvertTree
 } from '@/utils/util'
 import {
   getMenus,
